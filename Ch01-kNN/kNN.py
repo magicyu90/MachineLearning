@@ -1,6 +1,8 @@
 '''k-近邻算法'''
 from numpy import *
 import operator
+import matplotlib
+import matplotlib.pyplot as plt
 
 
 def createDataSet():
@@ -44,13 +46,16 @@ def file2matrix(fileName):
     for line in arrayOLines:
         line = line.strip()
         listFromLine = line.split('\t')
-        returnMatrix[index,:] = listFromLine[0:3]
+        returnMatrix[index, :] = listFromLine[0:3]
         classLabelVector.append(int(listFromLine[-1]))
         index += 1
 
-
-    print('returnMatrix:', returnMatrix, 'classLabelVector:', classLabelVector)
+    # print('returnMatrix:', returnMatrix, 'classLabelVector:', classLabelVector)
     return returnMatrix, classLabelVector
 
 
-file2matrix('datingTestSet2.txt')
+datingDataMat, datingLabels = file2matrix('datingTestSet2.txt')
+fig = plt.figure()
+ax = fig.add_subplot(111)
+ax.scatter(datingDataMat[:, 1], datingDataMat[:, 2])
+plt.show()
