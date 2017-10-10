@@ -13,26 +13,20 @@ def createDataSet():
 
 def classify0(inX, dataSet, labels, k):
     dataSetSize = dataSet.shape[0]
-    diffMat = tile(inX, (dataSetSize, 1)) - dataSet
-    sqlDiffMat = diffMat ** 2
-    sqlDistance = sqlDiffMat.sum(axis=1)
-    distances = sqlDistance**0.5
+    diffMat = tile(inX, (dataSetSize, 1)) - dataSet  # 使用inx填充同样大小的矩阵并和原矩阵求差值
+    sqlDiffMat = diffMat ** 2  # 差值平方
+    sqlDistance = sqlDiffMat.sum(axis=1)  # 差值求和
+    distances = sqlDistance**0.5  # 差值开平方
     sortedDistIndices = distances.argsort()
     classCount = {}
 
     for i in range(k):
         label = labels[sortedDistIndices[i]]
         classCount[label] = classCount.get(label, 0) + 1
-    sortedClassCount = sorted(classCount.items(),
-                              key=operator.itemgetter(1), reverse=True)
+    sortedClassCount = sorted(
+        classCount.items(), key=operator.itemgetter(1), reverse=True)
 
-    res = sortedClassCount[0, 0]
-    print('result:', res)
-
-
-# group, labels = createDataSet()
-
-# classify0([0, 0], group, labels, 3)
+    return sortedClassCount[0, 0]
 
 
 def file2matrix(fileName):
@@ -65,3 +59,36 @@ def autoNorm(dataSet):
     rangesDataSet = tile(ranges, (rows, 1))  # 获取最大值最小值差的矩阵
     normDataSet = normDataSet / rangesDataSet  # 归一处理
     return normDataSet, ranges, minVals
+
+
+def datingClassTest():
+    '''测试算法'''
+    hoRatio = 0.1  # 10%
+    datingDataMat, datingLabels = file2matrix('datingTestSet2.txt')  # 读取文件
+    normMat, ranges, minVals = autoNorm(datingDataMat)
+    m = normMat.shape[0]
+    numTestVecs = int(m * hoRatio)
+    errorCount = 0.0
+    print('normMat[numTestVecs:m, :]:', normMat[numTestVecs:m, :])
+    for i in range(numTestVecs):
+        classifierResult = classify0(
+            normMat[i, :], normMat[numTestVecs:m, :], datingLabels[numTestVecs:m], 3)
+        print('classfierResult:', classifierResult)
+        print("the classifier came back with: %d, the real answer is: %d" %
+              (classifierResult, datingLabels[i]))
+        if classifierResult != datingLabels[i]:
+            errorCount += 1.0
+    print("the total error rate is: %f" % (errorCount / float(numTestVecs)))
+    print("errorCount:", errorCount)
+
+
+def image2Vector(fileName):
+    '''图像中的像素转换为矩阵'''
+    returnVector = zeros((1, 1024))
+    fr = open(fileName)
+    for i in range(32):
+        lineStr = fr.readline()
+        for j in range(32):
+            returnVector[0, i * 32 + j] = int(lineStr[j])
+    #print('returnVector:', returnVector)
+    return returnVector

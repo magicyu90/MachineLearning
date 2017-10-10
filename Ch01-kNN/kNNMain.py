@@ -10,5 +10,11 @@ import kNN
 # plt.show()
 
 
-myMatrix, myLabels = kNN.file2matrix('myMatrix.txt')
-kNN.autoNorm(myMatrix)
+# myMatrix, myLabels = kNN.file2matrix('myMatrix.txt')
+# kNN.autoNorm(myMatrix)
+
+
+# kNN.datingClassTest()
+testVector = kNN.image2Vector('testDigits/0_3.txt')
+print('testVector 0-31:', testVector[0, 0:31])
+print('testVector 32-63:', testVector[0, 32:63])
