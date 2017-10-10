@@ -54,8 +54,14 @@ def file2matrix(fileName):
     return returnMatrix, classLabelVector
 
 
-datingDataMat, datingLabels = file2matrix('datingTestSet2.txt')
-fig = plt.figure()
-ax = fig.add_subplot(111)
-ax.scatter(datingDataMat[:, 1], datingDataMat[:, 2])
-plt.show()
+def autoNorm(dataSet):
+    '''归一化特征值,newValue = (oldValue-min)/(max-min)'''
+    minVals = dataSet.min(0)
+    maxVals = dataSet.max(0)
+    ranges = maxVals - minVals
+    normDataSet = zeros(shape(dataSet))  # 得到value是0的矩阵
+    rows = dataSet.shape[0]  # 获得行数
+    normDataSet = dataSet - tile(minVals, (rows, 1))  # 矩阵中的值和最小值的差值
+    rangesDataSet = tile(ranges, (rows, 1))  # 获取最大值最小值差的矩阵
+    normDataSet = normDataSet / rangesDataSet  # 归一处理
+    return normDataSet, ranges, minVals
