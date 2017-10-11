@@ -22,11 +22,14 @@ def classify0(inX, dataSet, labels, k):
 
     for i in range(k):
         label = labels[sortedDistIndices[i]]
-        classCount[label] = classCount.get(label, 0) + 1
-    sortedClassCount = sorted(
-        classCount.items(), key=operator.itemgetter(1), reverse=True)
+        classCount[label] = classCount.get(label, 0) + 1  # 计算每个分类出现的次数
 
-    return sortedClassCount[0, 0]
+    print('classCount:', classCount)
+    sortedClassCount = sorted(
+        classCount.items(), key=operator.itemgetter(1), reverse=True)  # 按照分类出现次数进行排序
+
+    print('sortedClassCount:', sortedClassCount)
+    return sortedClassCount[0][0]
 
 
 def file2matrix(fileName):
@@ -68,6 +71,7 @@ def datingClassTest():
     normMat, ranges, minVals = autoNorm(datingDataMat)
     m = normMat.shape[0]
     numTestVecs = int(m * hoRatio)
+    print('num2Test:', numTestVecs)
     errorCount = 0.0
     print('normMat[numTestVecs:m, :]:', normMat[numTestVecs:m, :])
     for i in range(numTestVecs):
