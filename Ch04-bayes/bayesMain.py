@@ -12,6 +12,7 @@ vocabList = bayes.createVocabList(listOfPosts)
 # print('trainMatrix:', trainMatrix)
 # bayes.trainNB0(trainMatrix, listOfLabels)
 
-myString = 'This book is the best book that I have laid eyes upon.'
-bayes.textParse(myString)
-bayes.spamTest()
+bayes.testingNB()
+# myString = 'This book is the best book that I have laid eyes upon.'
+# bayes.textParse(myString)
+# bayes.spamTest()
