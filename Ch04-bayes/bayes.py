@@ -14,19 +14,16 @@ def loadDataSet():
 
 
 def createVocabList(dataSet):
-    """创建单词表List"""
     vocabSet = set([])
     for document in dataSet:
         vocabSet = vocabSet | set(document)
 
     vocabList = list(vocabSet)
     sortedList = sorted(vocabList, key=lambda x: x.lower())
-    print('vocabList sorted:', sortedList)
     return sortedList
 
 
 def setOfWords2Vec(vocabList, inputSet):
-    """词汇表中的单词在输入的文档中是否出现"""
     returnVec = [0] * len(vocabList)
     for word in inputSet:
         if word in vocabList:
@@ -34,6 +31,14 @@ def setOfWords2Vec(vocabList, inputSet):
 
     print('returnVec:', returnVec)
     return returnVec
+
+
+def bagOfWords2VecMN(vocabList, inputSet):
+    returnVec = [0] * len(vocabList)
+    for word in inputSet:
+        if word in vocabList:
+            returnVec[vocabList.index(word)] += 1
+    return returnVec            
 
 
 def trainNB0(trainMatrix, trainCategory):
@@ -60,3 +65,47 @@ def trainNB0(trainMatrix, trainCategory):
     print('p0Vect:', p0Vect)
     print('p1Vect:', p1Vect)
     return p0Vect, p1Vect, pAbusive
+
+
+def textParse(bigStr):
+    import re
+    listOfTokens = re.split(r'\W*', bigStr)
+    words = [tok.lower() for tok in listOfTokens if len(tok) > 2]
+    # print('words:', words)
+    return words
+
+
+def spamTest():
+    docList = []
+    classList = []
+    fullText = []
+    for i in range(1, 26):
+        wordList = textParse(open('email/spam/%d.txt' % i).read())
+        docList.append(wordList)
+        fullText.extend(wordList)
+        classList.append(1)
+        wordList = textParse(open('email/ham/%d.txt' % i).read())
+        docList.append(wordList)
+        fullText.extend(wordList)
+        classList.append(0)
+    vocabList = createVocabList(docList)  # create vocabulary
+    trainingSet = list(range(50))
+    testSet = []  # create test set
+
+    print('docList:', docList)
+
+    for i in range(10):
+        randIndex = int(random.uniform(0, len(trainingSet)))
+        testSet.append(trainingSet[randIndex])
+        del trainingSet[randIndex]
+
+    print('testSet:', testSet)
+    print('trainingSet:', trainingSet)
+
+    trainMat = []
+    trainClasses = []
+    for docIndex in trainingSet:
+        item = bagOfWords2VecMN(vocabList, docList[docIndex])
+        trainMat.append(item)
+        trainClasses.append(classList[docIndex])
+
