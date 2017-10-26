@@ -108,3 +108,46 @@ def spamTest():
         item = bagOfWords2VecMN(vocabList, docList[docIndex])
         trainMat.append(item)
         trainClasses.append(classList[docIndex])
+
+
+def calMostFreq(vocabList, fullText):
+    import operator
+    freqDict = {}
+    for word in vocabList:
+        freqDict[word] = fullText.count(word)
+    sortedFreq = sorted(
+        freqDict.items(), key=operator.itemgetter(1), reverse=True)
+
+    print('sortedFreq[:30]:', sortedFreq[:30])
+    return sortedFreq[:30]
+
+
+def localWords(feed1, feed0):
+    """
+    Function:   RSS源分类器
+
+    Args:   feed1:RSS源
+            feed0:RSS源
+
+    Returns:    vocablist:词汇表
+                p0V:类别概率向量
+                p1V:类别概率向量
+    """
+    import feedparser
+    docList = []
+    classList = []
+    fullText = []
+
+    minLen = min(len(feed1['entries']), len(feed0['entries']))
+    print('minLen:', minLen)
+    for i in range(minLen):
+        wordList = textParse(feed1['entries'][i]['summary'])
+        docList.append(wordList)
+        fullText.extend(wordList)
+        classList.append(1)
+        wordList = textParse(feed0['entries'][i]['summary'])
+        docList.append(wordList)
+        fullText.extend(wordList)
+        classList.append(0)
+    vocabList = createVocabList(docList)
+    top30Words = calMostFreq(vocabList, fullText)
