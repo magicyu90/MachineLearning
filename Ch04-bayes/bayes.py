@@ -23,6 +23,15 @@ def createVocabList(dataSet):
     return sortedList
 
 
+def classifyNB(vec2Classify, p0Vec, p1Vec, pClass1):
+    p1 = sum(vec2Classify * p1Vec) + log(pClass1)
+    p0 = sum(vec2Classify * p0Vec) + log(1.0 - pClass1)
+    if p1 > p0:
+        return 1
+    else:
+        return 0
+
+
 def setOfWords2Vec(vocabList, inputSet):
     returnVec = [0] * len(vocabList)
     for word in inputSet:
@@ -118,7 +127,7 @@ def calMostFreq(vocabList, fullText):
     sortedFreq = sorted(
         freqDict.items(), key=operator.itemgetter(1), reverse=True)
 
-    print('sortedFreq[:30]:', sortedFreq[:30])
+   # print('sortedFreq[:30]:', sortedFreq[:30])
     return sortedFreq[:30]
 
 
@@ -151,3 +160,32 @@ def localWords(feed1, feed0):
         classList.append(0)
     vocabList = createVocabList(docList)
     top30Words = calMostFreq(vocabList, fullText)
+
+    for pairN in top30Words:
+        if pairN[0] in vocabList:
+            vocabList.remove(pairN[0])
+
+    trainingSet = list(range(2 * minLen))  # 使用此数组进行训练
+    testSet = []  # 使用此数组进行测试
+
+    for i in range(20):
+        randomIndex = int(random.uniform(0, len(trainingSet)))
+        testSet.append(trainingSet[randomIndex])
+        del trainingSet[randomIndex]
+
+    trainingMatrix = []
+    trainingClass = []
+    # 训练
+    for docIndex in trainingSet:
+        trainingMatrix.append(bagOfWords2VecMN(vocabList, docList[docIndex]))
+        trainingClass.append(classList[docIndex])
+    p0v, p1v, pSapm = trainNB0(array(trainingMatrix), array(trainingClass))
+
+    errorCount = 0
+    # 测试
+    for docIndex in testSet:
+        wordVector = bagOfWords2VecMN(vocabList, docList[docIndex])
+        if classifyNB(wordVector, p0v, p1v, pSapm) != classList[docIndex]:
+            errorCount += 1
+
+    print('the error rate is:', float(errorCount) / len(testSet))

@@ -23,3 +23,4 @@ feed1 = feedparser.parse('http://newyork.craiglist.org/stp/index.rss')
 feed0 = feedparser.parse('http://sfbay.craiglist.org/stp/index.rss')
 
 bayes.localWords(feed1, feed0)
+
