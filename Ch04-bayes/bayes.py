@@ -163,7 +163,7 @@ def localWords(feed1, feed0):
 
     for pairN in top30Words:
         if pairN[0] in vocabList:
-            vocabList.remove(pairN[0])
+            vocabList.remove(pairN[0])  # 去掉了top30的词汇表
 
     trainingSet = list(range(2 * minLen))  # 使用此数组进行训练
     testSet = []  # 使用此数组进行测试
@@ -189,3 +189,27 @@ def localWords(feed1, feed0):
             errorCount += 1
 
     print('the error rate is:', float(errorCount) / len(testSet))
+    return vocabList, p0v, p1v
+
+
+def getTopWords(ny, sf):
+    """获取纽约和旧金山地区的使用次数"""
+    import operator
+    vocabList, p0v, p1v = localWords(ny, sf)
+    topNYWords = []
+    topSFWords = []
+    for i in range(len(p0v)):
+        if p0v[i] > -6:
+            topNYWords.append((vocabList[i], p0v[i]))
+        if p1v[i] > -6:
+            topSFWords.append((vocabList[i], p1v[i]))
+
+    sortedNYWords = sorted(topNYWords, key=lambda x: x[1], reverse=True)
+    print('NY----------------------------NY')
+    for item in sortedNYWords:
+        print(item[0])
+
+    sortedSFWords = sorted(topSFWords, key=lambda x: x[1], reverse=True)
+    print('SF----------------------------SF')
+    for item in sortedSFWords:
+        print(item[0])        
