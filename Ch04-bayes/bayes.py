@@ -17,7 +17,6 @@ def createVocabList(dataSet):
     vocabSet = set([])
     for document in dataSet:
         vocabSet = vocabSet | set(document)
-
     vocabList = list(vocabSet)
     sortedList = sorted(vocabList, key=lambda x: x.lower())
     return sortedList
@@ -212,4 +211,5 @@ def getTopWords(ny, sf):
     sortedSFWords = sorted(topSFWords, key=lambda x: x[1], reverse=True)
     print('SF----------------------------SF')
     for item in sortedSFWords:
-        print(item[0])        
+        print(item[0])
+
