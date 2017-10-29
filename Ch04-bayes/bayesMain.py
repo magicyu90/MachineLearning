@@ -27,6 +27,10 @@ bayes.trainNB0(trainMatrix, listOfLabels)
 # bayes.getTopWords(nyFeed, sfFeed)
 
 
+def getPercentage(value):
+    return "{:.2%}".format(float(value))
+
+
 def createTrainingMatrix():
 
     classList = ['A', 'B', 'C']
@@ -83,7 +87,7 @@ def createTrainingMatrix():
             currentList = classBList
         if i == 2:
             currentList = classCList
-            
+
         key1Count = 0
         key2Count = 0
         key3Count = 0
@@ -106,13 +110,24 @@ def createTrainingMatrix():
                 key6Count += 1
             if item[2] == 'f':
                 key7Count += 1
-        classF1ListStatistic[currentKey]['a'] = key1Count
-        classF1ListStatistic[currentKey]['b'] = key2Count
-        classF1ListStatistic[currentKey]['c'] = key3Count
-        classF2ListStatistic[currentKey]['d'] = key4Count
-        classF2ListStatistic[currentKey]['e'] = key5Count
-        classF3ListStatistic[currentKey]['t'] = key6Count
-        classF3ListStatistic[currentKey]['f'] = key7Count
+        classF1ListStatistic[currentKey]['a'] = getPercentage(
+            float(key1Count / len(classAList)))
+        classF1ListStatistic[currentKey]['b'] = getPercentage(
+            float(key2Count / len(classAList)))
+        classF1ListStatistic[currentKey]['c'] = getPercentage(
+            float(key3Count / len(classAList)))
+        classF2ListStatistic[currentKey]['d'] = getPercentage(
+            float(key4Count / len(classBList))
+        )
+        classF2ListStatistic[currentKey]['e'] = getPercentage(
+            float(key5Count / len(classBList))
+        )
+        classF3ListStatistic[currentKey]['t'] = getPercentage(
+            float(key6Count / len(classCList))
+        )
+        classF3ListStatistic[currentKey]['f'] = getPercentage(
+            float(key7Count / len(classCList))
+        )
 
     print('classF1ListStatistic:', classF1ListStatistic)
     print('classF2ListStatistic:', classF2ListStatistic)
