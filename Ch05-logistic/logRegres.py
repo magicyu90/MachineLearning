@@ -39,6 +39,7 @@ def gradAscent(dataMatIn, classLabels):
 
 
 def plotBestFit(weight):
+    """画出分类线"""
     import matplotlib.pyplot as plt
     weights = weight.getA()
     dataMat, labelMat = loadDataSet()
