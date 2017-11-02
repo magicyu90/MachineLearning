@@ -38,6 +38,18 @@ def gradAscent(dataMatIn, classLabels):
     return weights
 
 
+def stocGradAscent0(dataMatrix, classLabels):
+    m, n = shape(dataMatrix)
+    alpha = 0.01
+    weights = ones(n)
+    for i in range(m):
+        h = sigmoid(sum(dataMatrix[i] * weights))
+        error = classLabels[i] - h
+        weights = weights + alpha * error * dataMatrix[i]
+    print('weights:', weights)
+    return weights
+
+
 def plotBestFit(weight):
     """画出分类线"""
     import matplotlib.pyplot as plt
@@ -62,9 +74,8 @@ def plotBestFit(weight):
     ax.scatter(xcord1, ycord1, s=30, c='red', marker='s')
     ax.scatter(xcord2, ycord2, s=30, c='green')
     x = arange(-3.0, 3.0, 0.1)
-    y = (-weights[0]-weights[1]*x)/weights[2]
+    y = (-weights[0] - weights[1] * x) / weights[2]
     ax.plot(x, y)
-    plt.xlabel('X1'); plt.ylabel('X2');
+    plt.xlabel('X1')
+    plt.ylabel('X2')
     plt.show()
-
-
