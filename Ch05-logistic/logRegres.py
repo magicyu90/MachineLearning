@@ -26,7 +26,7 @@ def gradAscent(dataMatIn, classLabels):
     labelMat = mat(classLabels).transpose()  # 类别向量(矩阵倒置:[100*1]=>[1*100])
     m, n = shape(dataMatrix)  # 得到dataMatrix行、列分别为100、3
     alpha = 0.001  # 步长
-    maxCycles = 500
+    maxCycles = 500  # 迭代次数
     weights = ones((n, 1))  # （3*1）
     print('weights:', weights)
     for k in range(maxCycles):
@@ -39,21 +39,25 @@ def gradAscent(dataMatIn, classLabels):
 
 
 def stocGradAscent0(dataMatrix, classLabels):
-    m, n = shape(dataMatrix)
+    dataMatrix = mat(dataMatrix)
+    m,n = shape(dataMatrix)
     alpha = 0.01
-    weights = ones(n)
+    weights = ones((1,3))
     for i in range(m):
-        h = sigmoid(sum(dataMatrix[i] * weights))
-        error = classLabels[i] - h
-        weights = weights + alpha * error * dataMatrix[i]
-    print('weights:', weights)
-    return weights
+        a=dataMatrix[i].copy()
+        a=a.transpose()
+        h = sigmoid(dot(weights,a))
+        error =classLabels[i] -h
+        weights = weights +alpha * error * dataMatrix[i]
+    return weights.transpose()
 
 
 def plotBestFit(weight):
     """画出分类线"""
     import matplotlib.pyplot as plt
+    print('weight:', weight)
     weights = weight.getA()
+    print('weights:', weights)
     dataMat, labelMat = loadDataSet()
     dataArr = array(dataMat)
     n = shape(dataArr)[0]
@@ -79,3 +83,23 @@ def plotBestFit(weight):
     plt.xlabel('X1')
     plt.ylabel('X2')
     plt.show()
+    # import matplotlib.pyplot as plt
+    # dataMat,labelMat=loadDataSet()
+    # dataArr = array(dataMat)
+    # n = shape(dataArr)[0] 
+    # xcord1 = []; ycord1 = []
+    # xcord2 = []; ycord2 = []
+    # for i in range(n):
+    #     if int(labelMat[i])== 1:
+    #         xcord1.append(dataArr[i,1]); ycord1.append(dataArr[i,2])
+    #     else:
+    #         xcord2.append(dataArr[i,1]); ycord2.append(dataArr[i,2])
+    # fig = plt.figure()
+    # ax = fig.add_subplot(111)
+    # ax.scatter(xcord1, ycord1, s=30, c='red', marker='s')
+    # ax.scatter(xcord2, ycord2, s=30, c='green')
+    # x = arange(-3.0, 3.0, 0.1)
+    # y = (-weights[0]-weights[1]*x)/weights[2]
+    # ax.plot(x, y)
+    # plt.xlabel('X1'); plt.ylabel('X2');
+    # plt.show()

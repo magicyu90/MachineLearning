@@ -1,10 +1,11 @@
 import logRegres as logR
+from numpy import *
 
 dataMatrix, classLabels = logR.loadDataSet()
 
-# weights = logR.gradAscent(dataMatrix, classLabels)
-weights = logR.stocGradAscent0(array(dataMatrix), classLabels)
-logR.plotBestFit(weights)
+weights1 = logR.gradAscent(dataMatrix, classLabels)
+weights2 = logR.stocGradAscent0(dataMatrix, classLabels)
+logR.plotBestFit(weights1)
 
 
 def f_prime(x_old):
@@ -28,4 +29,4 @@ def cal():
     return x_new
 
 
-cal()
+# cal()
