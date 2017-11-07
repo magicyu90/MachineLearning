@@ -3,10 +3,13 @@ from numpy import *
 
 dataMatrix, classLabels = logR.loadDataSet()
 
-#weights1 = logR.gradAscent(dataMatrix, classLabels)
-weights2 = logR.stocGradAscent0(dataMatrix, classLabels)
-weights3 = logR.stocGradAscent1(dataMatrix, classLabels)
-logR.plotBestFit(weights3)
+# weights1 = logR.gradAscent(dataMatrix, classLabels)
+# weights2 = logR.stocGradAscent0(dataMatrix, classLabels)
+# weights3 = logR.stocGradAscent1(dataMatrix, classLabels)
+# logR.plotBestFit(weights3)
+
+# logR.coliTest()
+logR.multiTest()
 
 
 def f_prime(x_old):
