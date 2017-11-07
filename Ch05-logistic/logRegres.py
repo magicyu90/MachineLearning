@@ -10,9 +10,6 @@ def loadDataSet():
         lineArr = line.strip().split()
         dataMat.append([1.0, float(lineArr[0]), float(lineArr[1])])
         labelMat.append(int(lineArr[2]))  # 添加类别
-
-    print('dataMat:', dataMat)
-    print('labelMat:', labelMat)
     return dataMat, labelMat
 
 
@@ -40,24 +37,39 @@ def gradAscent(dataMatIn, classLabels):
 
 def stocGradAscent0(dataMatrix, classLabels):
     dataMatrix = mat(dataMatrix)
-    m,n = shape(dataMatrix)
+    m, n = shape(dataMatrix)
     alpha = 0.01
-    weights = ones((1,3))
+    weights = ones((1, 3))
     for i in range(m):
-        a=dataMatrix[i].copy()
-        a=a.transpose()
-        h = sigmoid(dot(weights,a))
-        error =classLabels[i] -h
-        weights = weights +alpha * error * dataMatrix[i]
+        a = dataMatrix[i].copy()
+        a = a.transpose()
+        h = sigmoid(dot(weights, a))
+        error = classLabels[i] - h
+        weights = weights + alpha * error * dataMatrix[i]
+    print('stocGradAscent0 weights:', weights)
     return weights.transpose()
+
+
+def stocGradAscent1(dataMatrix, classLabels, numIter=150):
+    m, n = shape(dataMatrix)
+    weights = ones((n, 1))  # initialize to all ones
+    for j in range(numIter):
+        dataIndex = list(range(m))
+        for i in range(m):
+            alpha = 4 / (1.0 + j + i) + 0.0001
+            randIndex = int(random.uniform(0, len(dataIndex)))
+            h = sigmoid(sum(dot(mat(dataMatrix[randIndex]), weights)))
+            error = classLabels[randIndex] - h
+            weights = weights + alpha * error * mat(dataMatrix[randIndex])
+            del dataIndex[randIndex]
+    print('stocGradAscent1 weights:', weights)
+    return weights
 
 
 def plotBestFit(weight):
     """画出分类线"""
     import matplotlib.pyplot as plt
-    print('weight:', weight)
     weights = weight.getA()
-    print('weights:', weights)
     dataMat, labelMat = loadDataSet()
     dataArr = array(dataMat)
     n = shape(dataArr)[0]
@@ -83,23 +95,3 @@ def plotBestFit(weight):
     plt.xlabel('X1')
     plt.ylabel('X2')
     plt.show()
-    # import matplotlib.pyplot as plt
-    # dataMat,labelMat=loadDataSet()
-    # dataArr = array(dataMat)
-    # n = shape(dataArr)[0] 
-    # xcord1 = []; ycord1 = []
-    # xcord2 = []; ycord2 = []
-    # for i in range(n):
-    #     if int(labelMat[i])== 1:
-    #         xcord1.append(dataArr[i,1]); ycord1.append(dataArr[i,2])
-    #     else:
-    #         xcord2.append(dataArr[i,1]); ycord2.append(dataArr[i,2])
-    # fig = plt.figure()
-    # ax = fig.add_subplot(111)
-    # ax.scatter(xcord1, ycord1, s=30, c='red', marker='s')
-    # ax.scatter(xcord2, ycord2, s=30, c='green')
-    # x = arange(-3.0, 3.0, 0.1)
-    # y = (-weights[0]-weights[1]*x)/weights[2]
-    # ax.plot(x, y)
-    # plt.xlabel('X1'); plt.ylabel('X2');
-    # plt.show()
