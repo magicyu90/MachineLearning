@@ -43,7 +43,7 @@ def stocGradAscent0(dataMatrix, classLabels):
     for i in range(m):
         a = dataMatrix[i].copy()
         a = a.transpose()
-        h = sigmoid(dot(weights, a))
+        h = sigmoid(weights * a)
         error = classLabels[i] - h
         weights = weights + alpha * error * dataMatrix[i]
     print('stocGradAscent0 weights:', weights)
@@ -51,17 +51,20 @@ def stocGradAscent0(dataMatrix, classLabels):
 
 
 def stocGradAscent1(dataMatrix, classLabels, numIter=150):
+    dataMatrix = mat(dataMatrix)          # dataMatIn格式：(1.0，第一特征值，第二特征值)
+    # labelMat = mat(classLabels).transpose()  # 标签向量转置为列矩阵
     m, n = shape(dataMatrix)
-    weights = ones((n, 1))  # initialize to all ones
+    alpha = 0.001
+    weights = ones((n, 1))
     for j in range(numIter):
-        dataIndex = list(range(m))
+        dataIndex = range(m)
         for i in range(m):
-            alpha = 4 / (1.0 + j + i) + 0.0001
+            alpha = 4 / (1.0 + j + i) + 0.01
             randIndex = int(random.uniform(0, len(dataIndex)))
-            h = sigmoid(sum(dot(mat(dataMatrix[randIndex]), weights)))
+            h = sigmoid(sum(dataMatrix[randIndex] * weights))
             error = classLabels[randIndex] - h
-            weights = weights + alpha * error * mat(dataMatrix[randIndex])
-            del dataIndex[randIndex]
+            weights = weights + alpha * error * \
+                dataMatrix[randIndex].transpose()
     print('stocGradAscent1 weights:', weights)
     return weights
 

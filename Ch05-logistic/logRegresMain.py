@@ -6,7 +6,7 @@ dataMatrix, classLabels = logR.loadDataSet()
 #weights1 = logR.gradAscent(dataMatrix, classLabels)
 weights2 = logR.stocGradAscent0(dataMatrix, classLabels)
 weights3 = logR.stocGradAscent1(dataMatrix, classLabels)
-logR.plotBestFit(weights2)
+logR.plotBestFit(weights3)
 
 
 def f_prime(x_old):
